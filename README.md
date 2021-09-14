@@ -23,6 +23,10 @@ Logging Service to demonstrate the distributed logging with log collector.
       git clone https://github.com/sumedhak27/Containerized-Distributed-Logger.git
       cd Containerized-Distributed-Logger
       ```
+    - Build logger app image, version_num/tag of the image and mentioned in the deployment.yaml should be same.
+      ```bash
+      docker build -f Dockerfile -t demo-logger:<tag> <path to Dockerfile>
+      ```
     - Create Persistent Volume
       ```bash
       kubectl apply -f pv.yaml
@@ -44,5 +48,5 @@ Logging Service to demonstrate the distributed logging with log collector.
     **👨‍👨‍👦‍👦 On worker nodes:**
     - Check if the logs are generated
       ```bash
-      less /var/log/demoLogger/logs
+      less /var/log/demoLogger/<container_name>.log
       ```
