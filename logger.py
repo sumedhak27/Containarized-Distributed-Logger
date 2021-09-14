@@ -1,31 +1,44 @@
 #! /usr/bin/python3
 
-import datetime
+import logging
 import socket
 import time
 import sys
 
-def infi_logger(location = "terminal"):
-    hostname = socket.gethostname()
+LOG_DIR = "/var/log/demoLogger/"
+HOSTNAME = socket.gethostname()
+LOG_FILE = LOG_DIR + HOSTNAME + ".log"
+
+def initialize_logger():
+    log = logging.getLogger("demo-logger")
+    log.setLevel(level=logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh = logging.FileHandler(LOG_FILE)
+    fh.setLevel(level=logging.DEBUG)
+    fh.setFormatter(formatter)
+    log.addHandler(fh)
+    return log
+    
+def infi_logger(logger=None):
     i = 0
     while True:
-        ctime = datetime.datetime.now().strftime("%b %d %Y %H:%M:%S")
-        logline = f"{ctime}: [{hostname}] Logging count {i}"
-        if location == "terminal":
-            print(logline)
+        logline = f"Logging count {i}"
+        if logger:
+            logger.info(logline)
         else:
-            with open(location, 'a') as log_file:
-                log_file.write(logline + '\n')
+            print(logline)
         time.sleep(20)
         i += 1
 
 
 if __name__ == "__main__":
     try:
-        infi_logger("/var/log/demoLogger/logs")
+        logger = initialize_logger()
+        infi_logger(logger)
     except KeyboardInterrupt:
         print("Stopping the demoLogger.")
         sys.exit(0)
     except Exception as err:
         print(err)
         sys.exit(1)
+
